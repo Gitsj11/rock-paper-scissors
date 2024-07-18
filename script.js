@@ -1,3 +1,53 @@
+var playerScore = 0;
+var computerScore = 0;
+var tieScore = 0;
+
+const playerWin = "Player wins round";
+const computerWin = "Computer wins round";
+const tie = "TIE";
+
+/* var clicked = false;
+let startGame = document.querySelector('#startGame');
+
+startGame.addEventListener('click', () => {
+    clicked = true;
+    alert('Start Game was clicked');
+}) */
+
+let rock = document.querySelector('#rock');
+rock.addEventListener('click', () => {
+    playGame("rock"); //Uses rock as player selection
+})
+
+let paper = document.querySelector('#paper');
+paper.addEventListener('click', () => {
+    playGame("paper"); //Uses paper as player selection
+})
+
+let scissors = document.querySelector('#scissors');
+scissors.addEventListener('click', () => {
+    playGame("scissors"); //Uses scissors as player selection
+})
+
+let results = document.querySelector('#results');
+const updateUI = (playerSelection, computerSelection, result) => {
+    let textContent = '';
+
+    textContent = `
+        <p>Computer Selection: ${computerSelection}</p>
+        <p>Player Selection: ${playerSelection}</p>
+        <p>Winner: ${result}</p>
+        <p>Computer Score: ${computerScore}</p>
+        <p>Player Score: ${playerScore}</p>
+        <p>Number of Ties: ${tieScore}</p>
+
+        `;
+
+    results.innerHTML = textContent;
+    
+    
+};
+ 
 function getComputerChoice() {
     choice = ""
     choiceSelection = Math.floor(Math.random() * 3) + 1; //Generates random number between 1 and 3
@@ -15,76 +65,64 @@ function getComputerChoice() {
 }
 
 function playRound(playerSelection, computerSelection) { //Plays one round of Rock, Paper, Scissors
+    let result = ''
     if (computerSelection === playerSelection) {
-         return tie;
+        result = tie;
     }
     if (computerSelection === "scissors" && playerSelection === "rock") {
-        return playerWin;
+        result = playerWin;
     }
     if (computerSelection === "scissors" && playerSelection === "paper") {
-        return computerWin;
-    }
-    if (computerSelection === "paper" && playerSelection === "paper") {
-        return tie;
+        result = computerWin;
     }
     if (computerSelection === "paper" && playerSelection === "rock") {
-        return computerWin;
+        result = computerWin;
     }
     if (computerSelection === "paper" && playerSelection === "scissors") {
-        return playerWin;
+        result = playerWin;
+    }
+    if (computerSelection == "rock" && playerSelection == "paper") {
+        result = playerWin;
+    }
+    if (computerSelection == "rock" && playerSelection == "scissors") {
+        result = computerWin;
     }
     if (computerSelection === "rock" && playerSelection === "rock") {
         return tie;
     }
-    if (computerSelection == "rock" && playerSelection == "paper") {
-        return playerWin;
+    if (computerSelection === "paper" && playerSelection === "paper") {
+        return tie;
     }
-    if (computerSelection == "rock" && playerSelection == "scissors") {
-        return computerWin;
-    }
+    //updateUI(playerSelection, computerSelection, result);
+    return result;
 }
-var playerScore = 0;
-var computerScore = 0;
-var tieScore = 0;
 
-function playGame() { //Begins game of Rock, Paper, Scissors
-    var startGame = prompt("Do you want to play Rock, Paper, Scissors", "");
-    play = startGame.toLowerCase();
-    if (play === "yes") {
-        maxRounds = 1000;
-        for (i = 0; i < maxRounds; i++) { //Simulates number of rounds in the game
-            const computerSelection = getComputerChoice(); //Gets computer selection
-            var playerChoice = prompt("Choose Rock, Paper, or Scissors", ""); //Asks user for selection of Rock, Paper, or Scissors
-            const playerSelection = playerChoice.toLowerCase();
-            playerWin = "You Win, " + playerSelection.charAt(0).toUpperCase() +  playerSelection.slice(1) + " beats " + computerSelection.charAt(0).toUpperCase() + computerSelection.slice(1);
-            computerWin = "You Lose, " + computerSelection.charAt(0).toUpperCase() + computerSelection.slice(1) + " beats " + playerSelection.charAt(0).toUpperCase() +  playerSelection.slice(1);
-            tie = "Tie, both selections were " + computerSelection.charAt(0).toUpperCase() + computerSelection.slice(1);
-            playerGameWon = "PLAYER WINS THE GAME";
-            computerGameWon = "COMPUTER WINS THE GAME";
-            roundResult = playRound(playerSelection, computerSelection); //Gets result of current round
-            console.log(roundResult);
-            gameScore(roundResult);
-            console.log("Player Score: " + playerScore); //Shows current player score
-            console.log("Computer Score: " + computerScore); //Shows current computer score
-            if (playerScore === 5) {
-                return playerGameWon; //Returns a string saying the player won the game
-            } else if (computerScore === 5) {
-                return computerGameWon; //Returns a string saying the computer won the game
-            }
-        }
-    }
-    else {
-        return "Game not started, Yes was not chosen or typed incorrectly";
-    }
-}
-console.log(playGame());
 
-function gameScore(result) { //Takes result from current round and calculates score
-    if (result === playerWin) {
-        playerScore++;
-    } else if (result === computerWin) {
-        computerScore++;
-    } else {
-        tieScore++;
+
+const playGame = (playerSelection) => {
+    const computerSelection = getComputerChoice();
+
+    const result = playRound(playerSelection, computerSelection);
+    if (result == playerWin) playerScore++;
+    else if (result == computerWin) computerScore++;
+    else if (result == tie) tieScore++;
+
+    updateUI(playerSelection, computerSelection, result); //Updates the results on page
+
+    console.log(playerScore);
+    console.log(computerScore);
+    console.log(tieScore);
+    console.log(result);
+
+    if (playerScore >= 5) {
+        alert('Player has won the game');
     }
+    else if (computerScore >= 5) {
+        alert('Computer has won the game');
+    }
+
 }
+
+
+
+
